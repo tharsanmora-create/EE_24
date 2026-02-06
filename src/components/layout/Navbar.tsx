@@ -1,16 +1,18 @@
 import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../../contexts/auth-context";
+import EELogo from "../EELogo";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
 
   return (
     <header className="border-b border-white/10 backdrop-blur-glass bg-white/5 sticky top-0 z-40">
-      <div className="container-page h-16 flex items-center px-1 md:px-2">
-        <Link to="/" className="font-semibold text-lg tracking-wide text-left mr-auto">
-          EE_Tamils LMS
+      <div className="container-page h-16 flex items-center px-1 md:px-2" role="navigation" aria-label="Main navigation">
+        <EELogo />
+        <Link to="/" className="font-semibold text-lg tracking-wide text-left mr-auto" aria-label="Home">
+          Electrical Engineering_23
         </Link>
-        <nav className="flex items-center gap-4 text-sm ml-auto">
+        <nav className="flex items-center gap-4 text-sm ml-auto" aria-label="User menu">
           <NavLink
             to="/"
             className={({ isActive }) =>

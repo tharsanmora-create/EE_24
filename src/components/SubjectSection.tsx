@@ -49,8 +49,8 @@ const SubjectSection = ({ title, items, subjectId, sectionKey, onEdit, onDelete,
           <div className="divide-y divide-white/10">
             {items.map((item) => (
               <div key={item.id} className="flex items-start gap-3 py-3">
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-neon-blue">
-                  ⓘ
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-neon-blue" aria-label="Book">
+                  📖
                 </span>
                 <div className="flex-1">
                   {item.title ? <h4 className="font-medium">{item.title}</h4> : null}
