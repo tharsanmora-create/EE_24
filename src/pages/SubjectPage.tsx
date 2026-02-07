@@ -272,7 +272,10 @@ const SubjectPage = () => {
               <button
                 key={section.key}
                 type="button"
-                onClick={() => setActiveSection(section.key)}
+                onClick={() => {
+                  setActiveSection(section.key);
+                  if (window.innerWidth < 1024) setSidebarOpen(false);
+                }}
                 className={
                   activeSection === section.key
                     ? "px-3 py-2 rounded-lg bg-white/15 text-white text-left"

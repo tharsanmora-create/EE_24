@@ -1,6 +1,5 @@
-import { NavLink } from "react-router-dom";
 
-const AdminSidebar = () => {
+const AdminSidebar = ({ onNav }: { onNav?: () => void }) => {
   return (
     <aside className="glass-card p-4 h-fit">
       <h2 className="section-title mb-4">Admin Controls</h2>
@@ -13,6 +12,7 @@ const AdminSidebar = () => {
               ? "px-3 py-2 rounded-lg bg-white/15 text-white"
               : "px-3 py-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10"
           }
+          onClick={onNav}
         >
           Admin Dashboard
         </NavLink>
@@ -23,6 +23,7 @@ const AdminSidebar = () => {
               ? "px-3 py-2 rounded-lg bg-white/15 text-white"
               : "px-3 py-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10"
           }
+          onClick={onNav}
         >
           Access Requests
         </NavLink>
