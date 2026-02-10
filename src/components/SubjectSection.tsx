@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { useRbac } from "../hooks/use-rbac";
 import UploadDialog from "./UploadDialog.tsx";
+import { useState } from "react";
 
 
 // Download helper function for direct file download using blob (fetch)
@@ -57,6 +58,7 @@ interface SubjectSectionProps {
 const SubjectSection = ({ title, items, subjectId, sectionKey, onEdit, onDelete, onReload }: SubjectSectionProps) => {
   const { hasRole } = useRbac();
   const canEdit = hasRole(["admin", "super_admin"]);
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
   return (
     <section className="glass-card p-6">
@@ -105,14 +107,19 @@ const SubjectSection = ({ title, items, subjectId, sectionKey, onEdit, onDelete,
                       View
                     </Button>
                   )}
-                  {/* Download Button: use JS function to trigger download as blob */}
+                  {/* Download Button: show 'Downloading...' while downloading */}
                   {item.storagePath || item.linkUrl ? (
                     <Button
                       variant="download"
                       size="sm"
-                      onClick={() => downloadFile(item.linkUrl || `/uploads/${item.storagePath}`, item.fileName)}
+                      disabled={downloadingId === item.id}
+                      onClick={async () => {
+                        setDownloadingId(item.id);
+                        await downloadFile(item.linkUrl || `/uploads/${item.storagePath}`, item.fileName);
+                        setDownloadingId(null);
+                      }}
                     >
-                      Download
+                      {downloadingId === item.id ? 'Downloading...' : 'Download'}
                     </Button>
                   ) : (
                     <Button variant="download" size="sm" disabled>
