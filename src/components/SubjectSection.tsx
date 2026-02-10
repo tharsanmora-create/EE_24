@@ -4,6 +4,35 @@ import { Card } from "./ui/card";
 import { useRbac } from "../hooks/use-rbac";
 import UploadDialog from "./UploadDialog.tsx";
 
+
+// Download helper function for direct file download using blob (fetch)
+async function downloadFile(url: string, filename?: string) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Network response was not ok');
+    const blob = await response.blob();
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    if (filename) link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (err) {
+    alert('Failed to download file.');
+  }
+}
+
+// Download helper function for blob content (generated in browser)
+function downloadBlob(content: string, filename: string) {
+  const blob = new Blob([content], { type: 'application/octet-stream' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
 export interface MaterialItem {
   id: string;
   title: string;
@@ -60,15 +89,34 @@ const SubjectSection = ({ title, items, subjectId, sectionKey, onEdit, onDelete,
                   <p className="text-xs text-white/40">Last update {item.uploadedAt}</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  {item.linkUrl ? (
+                  {/* View Button: open file in new tab if storagePath or linkUrl exists */}
+                  {item.storagePath || item.linkUrl ? (
                     <Button asChild variant="info" size="sm">
-                      <a href={item.linkUrl} target="_blank" rel="noreferrer">
+                      <a
+                        href={item.linkUrl || `/uploads/${item.storagePath}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         View
                       </a>
                     </Button>
                   ) : (
-                    <Button variant="info" size="sm">
+                    <Button variant="info" size="sm" disabled>
                       View
+                    </Button>
+                  )}
+                  {/* Download Button: use JS function to trigger download as blob */}
+                  {item.storagePath || item.linkUrl ? (
+                    <Button
+                      variant="download"
+                      size="sm"
+                      onClick={() => downloadFile(item.linkUrl || `/uploads/${item.storagePath}`, item.fileName)}
+                    >
+                      Download
+                    </Button>
+                  ) : (
+                    <Button variant="download" size="sm" disabled>
+                      Download
                     </Button>
                   )}
                   {canEdit && (
@@ -89,7 +137,6 @@ const SubjectSection = ({ title, items, subjectId, sectionKey, onEdit, onDelete,
                       </Button>
                     </>
                   )}
-                  <Button variant="download" size="sm">Download</Button>
                 </div>
               </div>
             ))}
