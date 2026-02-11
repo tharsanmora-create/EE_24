@@ -74,6 +74,7 @@ const subjectMap: Record<string, { name: string; code: string }> = {
   ma3014: { name: "Applied Statistics", code: "MA3014" },
   ma3024: { name: "Numerical Methods", code: "MA3024" },
   cs2023: { name: "Data Structures and Algorithms", code: "CS2023" },
+  ma2034: { name: "Linear Algebra", code: "MA2034" },
 };
 
 const SubjectPage = () => {
@@ -137,6 +138,12 @@ const SubjectPage = () => {
           moduleName: "Data Structures and Algorithms",
           bucketName: "cs2023-module",
           tableName: "cs2023_uploads",
+        }
+      : subjectId === "ma2034"
+      ? {
+          moduleName: "Linear Algebra",
+          bucketName: "ma2034-module",
+          tableName: "ma2034_uploads",
         }
       : null;
 

@@ -4,20 +4,31 @@ fileRouter.post(
   authenticate,
   requireRole(["admin", "super_admin"]),
   async (req, res) => {
-    const { materialId, title, description, sectionKey, weekLabel, fileUrl } = req.body as {
+    const { materialId, title, description, sectionKey, weekLabel, fileUrl, tableName } = req.body as {
       materialId: string;
       title: string;
       description: string;
       sectionKey: string;
       weekLabel?: string;
       fileUrl: string;
+      tableName: string;
     };
     const editorId = req.user.id;
+    // Log the edit
     const [edit] = await query(
       `INSERT INTO material_edits (material_id, title, description, section_key, week_label, file_url, editor_id)
        VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
       [materialId, title, description, sectionKey, weekLabel ?? null, fileUrl, editorId]
     );
+
+    // Update the uploaded_at field in the relevant uploads table
+    if (tableName) {
+      await query(
+        `UPDATE ${tableName} SET uploaded_at = now() WHERE id = $1`,
+        [materialId]
+      );
+    }
+
     res.json(edit);
   }
 );

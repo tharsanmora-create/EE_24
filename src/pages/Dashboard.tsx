@@ -61,6 +61,13 @@ const subjects = [
     tag: "Eng-CSE",
     cover: "bg-[linear-gradient(135deg,rgba(255,91,216,0.18),rgba(138,77,255,0.12))]",
   },
+  {
+    id: "ma2034",
+    name: "Linear Algebra",
+    code: "MA2034",
+    tag: "Eng-MATH",
+    cover: "bg-[linear-gradient(135deg,rgba(255,255,255,0.22),rgba(0,210,255,0.10))]",
+  },
 ];
 
 const Dashboard = () => {
@@ -77,6 +84,7 @@ const Dashboard = () => {
     ma3014: { tableName: "ma3014_uploads" },
     ma3024: { tableName: "ma3024_uploads" },
     cs2023: { tableName: "cs2023_uploads" },
+    ma2034: { tableName: "ma2034_uploads" },
   };
 
   useEffect(() => {

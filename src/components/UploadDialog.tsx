@@ -87,6 +87,12 @@ const UploadDialog = ({
           bucketName: "cs2023-module",
           tableName: "cs2023_uploads",
         }
+      : subjectId === "ma2034"
+      ? {
+          moduleName: "Linear Algebra",
+          bucketName: "ma2034-module",
+          tableName: "ma2034_uploads",
+        }
       : null;
   const sectionNameMap: Record<string, string> = {
     lecture_notes: "Lecture Notes",
@@ -151,12 +157,20 @@ const UploadDialog = ({
         video_link: videoLink || null,
       };
 
-      const { error } = isEdit && editingId
-        ? await supabaseClient.from(tableName).update(payload).eq("id", editingId)
-        : await supabaseClient.from(tableName).insert(payload);
-
-      if (error) {
-        throw error;
+      if (isEdit && editingId) {
+        // Use Supabase update and set uploaded_at to now()
+        const { error } = await supabaseClient
+          .from(tableName)
+          .update({ ...payload, uploaded_at: new Date().toISOString() })
+          .eq("id", editingId);
+        if (error) {
+          throw error;
+        }
+      } else {
+        const { error } = await supabaseClient.from(tableName).insert(payload);
+        if (error) {
+          throw error;
+        }
       }
 
       setWeekLabel("");
@@ -187,6 +201,12 @@ const UploadDialog = ({
           </DialogDescription>
         </DialogHeader>
         <form className="grid gap-3">
+          <div className="flex items-center gap-2 bg-blue-50/10 rounded p-2 mb-1">
+            <span role="img" aria-label="Share">📤</span>
+            <span className="text-xs text-blue-300">
+              Tip: On mobile, use <b>Share note</b> in Samsung Notes and select your browser to upload directly—no need to save the file locally!
+            </span>
+          </div>
           <input
             className="btn-secondary text-left"
             placeholder="Title"
